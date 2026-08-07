@@ -1,0 +1,18 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Credentials 
+kaggle.json
+*.env
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+huggingface_cache/
