@@ -1,0 +1,12 @@
+{
+  "id": "andreeacochintele/lmkbc-gemma3-27b",
+  "title": "lmkbc-gemma3-27b",
+  "code_file": "run_gemma3_27b.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

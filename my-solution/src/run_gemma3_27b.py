@@ -1,4 +1,6 @@
 """
+TEST- SET
+
 Push with:
     kaggle kernels push -p . --accelerator NvidiaTeslaT4
 
@@ -844,7 +846,7 @@ class OllamaBaselineModel(HFTransformersBaselineModel):
 
 # Wires everything together and runs it end to end.
 def main():
-    data_path = os.path.join(REPO_DIR, "data", "val.jsonl")
+    data_path = os.path.join(REPO_DIR, "data", "test.jsonl")
     prompts_path = os.path.join(REPO_DIR, "prompt_templates", "question_prompts.csv")
     train_path = os.path.join(REPO_DIR, "data", "train.jsonl")
 
