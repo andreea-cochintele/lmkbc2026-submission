@@ -116,7 +116,7 @@ submission) or `my-solutionval` (validation set, locally scoreable) — and `cd`
 into its `src/` folder. `kernel-metadata.json` already lives there, right next to
 the script; don't delete it afterwards, it's not a temporary copy, it's the only
 one you have. Both folders' `kernel-metadata.json` point at the same Kaggle
-kernel id (`andreeacochintele/lmkbc-gemma3-27b`), so pushing one after the other
+kernel id (`<your-kaggle-username>/lmkbc-gemma3-27b`), so pushing one after the other
 reuses that same kernel slot on Kaggle — fine for reproducing one at a time, just
 don't expect both runs to exist there simultaneously:
  
@@ -134,7 +134,7 @@ same way by every CLI version, so passing it explicitly is safer.
 Still from `src/`:
  
 ```bash
-kaggle kernels status andreeacochintele/lmkbc-gemma3-27b
+kaggle kernels status <your-kaggle-username>/lmkbc-gemma3-27b
 ```
  
 A full run on either data file (475 rows) takes anywhere from tens of minutes to a
@@ -148,7 +148,7 @@ Still from `src/`. If you're reproducing `my-solutionval`, download into
 `results/`:
  
 ```bash
-kaggle kernels output andreeacochintele/lmkbc-gemma3-27b -p ./results1 --file-pattern "predictions\.jsonl$" -o
+kaggle kernels output <your-kaggle-username>/lmkbc-gemma3-27b -p ./results1 --file-pattern "predictions\.jsonl$" -o
 ```
  
 If you're reproducing `my-solution` instead, `results1/` already holds the
@@ -156,7 +156,7 @@ official submission output (predictions + log, Codabench score 0.4733) — use a
 different folder name so you don't overwrite it:
  
 ```bash
-kaggle kernels output andreeacochintele/lmkbc-gemma3-27b -p ./results2 --file-pattern "predictions\.jsonl$" -o
+kaggle kernels output <your-kaggle-username>/lmkbc-gemma3-27b -p ./results2 --file-pattern "predictions\.jsonl$" -o
 ```
  
 Either way, this creates `src/<that folder>/predictions.jsonl` -- note the path
