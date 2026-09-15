@@ -16,6 +16,7 @@ Pull results:
 
 Evaluate:
     python ../dataset2026/evaluate.py -g ../dataset2026/data/val.jsonl -p kaggle_results/predictions.jsonl | Tee-Object -FilePath results.txt
+    (same script for val or test - just swap the -g file)
 """
 
 
@@ -34,7 +35,7 @@ from typing import Dict, List, Optional
 # Runs through a local Ollama server instead of `transformers` when True.
 # Ollama re-hosts Gemma/Llama without needing an HF token or license
 # click-through, sidestepping the gating entirely. Model tag is set
-# further down, in main().
+# further down, in OLLAMA_MODEL_TAG.
 USE_OLLAMA_MODEL = True
 
 # Fixes which few-shot examples random.sample() picks in _build_prompt,
@@ -136,7 +137,7 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(42)
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig  
 
-NUMERIC_RELATIONS = {"hasArea", "hasCapacity", "seriesHasNumberOfEpisodes"}
+NUMERIC_RELATIONS = {"hasArea", "hasCapacity"}
 
 # Only used when USE_ONE_PER_LINE_FORMAT is on. Comma-splitting breaks
 # when the model hedges in full sentences ("Well, I'm not sure, but
@@ -222,7 +223,6 @@ SINGLE_ANSWER_RELATIONS = {"personHasCityOfDeath"}
 MAX_NEW_TOKENS_BY_RELATION = {
     "hasArea": 16,
     "hasCapacity": 16,
-    "seriesHasNumberOfEpisodes": 16,
     "personHasCityOfDeath": 40,
     "companyTradesAtStockExchange": 60,
     "countryLandBordersCountry": 80,
@@ -727,9 +727,11 @@ class HFTransformersBaselineModel(AbstractModel):
         inputs = remaining_inputs  # everything below processes only the remaining items
 
         # Group by relation so a batch can share one max_new_tokens
-        # budget - mixing a 16-token hasArea answer with a 300-token
-        # awardWonBy one in the same batch would force the larger budget
-        # on everyone.
+        # budget - mixing a 40-token personHasCityOfDeath answer with an
+        # 80-token countryLandBordersCountry one in the same batch would
+        # force the larger budget on everyone. (hasArea/hasCapacity and
+        # awardWonBy never reach this path - they're always routed through
+        # the special one-at-a-time methods above.)
         indices_by_relation: Dict[str, List[int]] = defaultdict(list)
         for idx, item in enumerate(inputs):
             indices_by_relation[item["Relation"]].append(idx)
@@ -853,7 +855,7 @@ def main():
     with open(data_path, "r", encoding="utf-8") as f:
         data = [json.loads(line) for line in f]
 
-    # Full val.jsonl run, no slicing. Same prompting setup (all 4 flags,
+    # Full test.jsonl run, no slicing. Same prompting setup (all 4 flags,
     # fixed seed, isolated per-relation RNG) across every model compared,
     # so any score difference comes from the model, not the prompting.
     if USE_OLLAMA_MODEL:
